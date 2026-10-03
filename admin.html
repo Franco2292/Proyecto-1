@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Panel · Urban Jungle</title>
+<style>
+:root{--bg:#07120d;--card:#10231a;--bd:#1f3d2b;--t:#eafff0;--m:#8fb39e;--g:#3ddc84;--gd:#123a25;--gold:#c8e86b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--t);font-family:-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:900px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:20px;margin:6px 0 2px;color:var(--g)}small,.mut{color:var(--m)}
+input,select,textarea{background:var(--card);color:var(--t);border:1px solid var(--bd);border-radius:10px;padding:11px 12px;font-size:15px;outline:none;width:100%}
+textarea{min-height:120px;font-family:inherit}
+button{background:var(--gd);color:var(--t);border:1px solid rgba(61,220,132,.35);border-radius:10px;padding:10px 14px;font-weight:700;font-size:13.5px;cursor:pointer}
+button.p{background:linear-gradient(90deg,#2fd977,var(--g));color:#06170f;border:0}
+button.r{background:rgba(255,90,90,.12);border-color:rgba(255,90,90,.4);color:#ff9d9d}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:12px 0}.tabs button{white-space:nowrap;border-radius:999px}
+.tabs button.on{background:linear-gradient(90deg,#2fd977,var(--g));color:#06170f}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}.row>input,.row>select{flex:1;min-width:120px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px}.stat span{font-size:10.5px;color:var(--m);text-transform:uppercase}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{padding:6px 12px;border-radius:999px;border:1px solid var(--bd);background:var(--card);color:var(--m);font-size:12.5px;font-weight:700;cursor:pointer}
+.chip.on{background:var(--g);color:#06170f;border-color:var(--g)}
+.guest{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:11px 14px;margin-bottom:8px}
+.guest.pres{background:var(--gd);border-color:rgba(61,220,132,.35)}
+.gi{flex:1;min-width:0}.gn{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gm{font-size:12px;color:var(--m);margin-top:3px}.tag{color:var(--gold);font-weight:700}
+.tg{width:46px;height:46px;border-radius:50%;border:2px solid var(--bd);background:transparent;color:#06170f;font-size:20px;padding:0;flex:none}
+.tg.on{background:var(--g);border-color:var(--g)}
+.hide{display:none!important}
+.lnk{display:flex;gap:8px;align-items:center;margin-bottom:8px}.lnk code{flex:1;font-size:11.5px;color:var(--m);word-break:break-all}
+#login{max-width:320px;margin:20vh auto;text-align:center}#login input{margin:12px 0}
+#boxwrap{position:relative;display:inline-block;max-width:100%;touch-action:none;cursor:crosshair;line-height:0}
+#boxwrap img{max-width:100%;max-height:520px;border-radius:10px}
+#box{position:absolute;border:2px solid #ff3b6b;background:rgba(255,59,107,.25);pointer-events:none}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#252041;padding:10px 18px;border-radius:12px;font-size:13px;opacity:0;transition:.25s;pointer-events:none}
+#toast.s{opacity:1}
+</style>
+</head>
+<body>
+<div id="login" class="card">
+  <h1>Urban Jungle</h1><small>Panel de recepción</small>
+  <input id="pin" type="password" inputmode="numeric" placeholder="PIN">
+  <button class="p" style="width:100%" onclick="login()">Entrar</button>
+</div>
+
+<div class="wrap hide" id="app">
+  <h1>Panel · <span id="evt"></span></h1>
+  <small id="rol"></small>
+  <div class="tabs" id="tabs">
+    <button data-t="rec" class="on">Recepción</button>
+    <button data-t="lnk" class="adm">Links</button>
+    <button data-t="imp" class="adm">Importar</button>
+    <button data-t="cfg" class="adm">Evento / Flyer</button>
+  </div>
+
+  <!-- RECEPCIÓN -->
+  <section id="t-rec">
+    <div class="stats">
+      <div class="stat"><b id="sT">0</b><span>Invitados</span></div>
+      <div class="stat"><b id="sP" style="color:var(--g)">0</b><span>Presentes</span></div>
+      <div class="stat"><b id="sN" style="color:var(--gold)">0</b><span>Pendientes</span></div>
+    </div>
+    <div class="chips" id="orig"></div>
+    <div class="row">
+      <input id="q" placeholder="Buscar nombre o teléfono..." autocomplete="off">
+      <button id="csv">⬇ CSV</button>
+    </div>
+    <div class="chips" id="flt"></div>
+    <div id="list"></div>
+    <div class="card" style="margin-top:14px">
+      <b>Alta en puerta</b> <small>(no estaba en la lista · entra marcado presente)</small>
+      <div class="row" style="margin-top:10px"><input id="aN" placeholder="Nombre y apellido"><input id="aT" type="tel" placeholder="Teléfono"><button class="p" id="aB">Agregar</button></div>
+    </div>
+  </section>
+
+  <!-- LINKS -->
+  <section id="t-lnk" class="hide">
+    <div class="card"><b>Links fijos</b><div id="fixed" style="margin-top:10px"></div></div>
+    <div class="card"><b>Links por RRPP</b>
+      <div class="row" style="margin-top:10px"><input id="rN" placeholder="Nombre del RRPP (ej: Juan)"><button class="p" id="rB">Crear link</button></div>
+      <div id="rrpps"></div>
+    </div>
+    <small>Cada invitado queda registrado con el origen del link que usó. Podés crear más orígenes con <code>?o=instagram</code>, <code>?o=flyer-qr</code>, etc.</small>
+  </section>
+
+  <!-- IMPORTAR -->
+  <section id="t-imp" class="hide">
+    <div class="card">
+      <b>Importar invitados</b><br><small>Pegá una lista (una persona por línea: <code>Nombre; Teléfono</code>) o subí un CSV/TXT. Los teléfonos repetidos se omiten solos.</small>
+      <textarea id="iT" style="margin-top:10px" placeholder="Juan Pérez; 3815551234&#10;Ana Gómez; 3816667890"></textarea>
+      <div class="row" style="margin-top:10px"><input type="file" id="iF" accept=".csv,.txt"></div>
+      <div class="row">
+        <select id="iO"><option value="importado">Origen: importado</option><option value="web">Origen: web</option><option value="organico">Origen: orgánico</option><option value="rrpp">Origen: RRPP</option></select>
+        <input id="iR" placeholder="Nombre RRPP (si aplica)">
+      </div>
+      <button class="p" id="iB">Importar</button> <small id="iS"></small>
+    </div>
+  </section>
+
+  <!-- CONFIG -->
+  <section id="t-cfg" class="hide">
+    <div class="card">
+      <b>Nombre del evento</b>
+      <div class="row" style="margin-top:10px"><input id="cT" placeholder="Ej: Sunset The Drop"><button class="p" id="cTB">Guardar</button></div>
+    </div>
+    <div class="card">
+      <b>Imagen de la invitación</b><br><small>Subí cualquier imagen. Después arrastrá sobre ella para marcar el recuadro donde va el nombre del invitado.</small>
+      <div class="row" style="margin-top:10px"><input type="file" id="cF" accept="image/*"></div>
+      <div id="boxwrap" class="hide"><img id="cI"><div id="box"></div></div>
+      <div class="row" style="margin-top:10px"><button class="p" id="cB">Guardar imagen y posición</button><small id="cS"></small></div>
+    </div>
+  </section>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ===== CONFIG: misma URL /exec que en index.html ===== */
+const API = 'PEGAR_URL_EXEC_AQUI';
+/* Link público de la invitación (carpeta del repo donde está index.html) */
+const BASE = location.origin + location.pathname.replace(/admin\.html$/, '') + 'index.html';
+
+const api = (action, d = {}) =>
+  fetch(API, { method: 'POST', body: JSON.stringify({ action, pin, ...d }) }).then(r => r.json());
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('s'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('s'), 2200); };
+
+let pin = sessionStorage.getItem('pin') || '', role = '', G = [], C = {}, flt = 'pend', org = 'all', q = '';
+let box = null, flyerData = null;
+
+async function login() {
+  if ($('#pin').value) pin = $('#pin').value.trim();
+  try {
+    const r = await api('list');
+    if (r.error) { toast('PIN incorrecto'); return; }
+    sessionStorage.setItem('pin', pin);
+    role = r.role; G = r.guests;
+    $('#login').classList.add('hide'); $('#app').classList.remove('hide');
+    $('#rol').textContent = role === 'admin' ? 'Administrador' : 'Recepción';
+    if (role !== 'admin') document.querySelectorAll('.adm').forEach(e => e.classList.add('hide'));
+    C = await api('config');
+    $('#evt').textContent = C.titulo; $('#cT').value = C.titulo === 'Evento' ? '' : C.titulo;
+    box = C.box; render(); renderLinks();
+    setInterval(refresh, 15000);
+  } catch (e) { toast('Error de conexión'); }
+}
+$('#pin').addEventListener('keydown', e => e.key === 'Enter' && login());
+if (pin) login();
+
+async function refresh() { const r = await api('list'); if (!r.error) { G = r.guests; render(); } }
+
+/* ---- Tabs ---- */
+$('#tabs').addEventListener('click', e => {
+  const t = e.target.dataset.t; if (!t) return;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b === e.target));
+  ['rec', 'lnk', 'imp', 'cfg'].forEach(x => $('#t-' + x).classList.toggle('hide', x !== t));
+  if (t === 'cfg') loadFlyer();
+});
+
+/* ---- Recepción ---- */
+const ORG_LABEL = { web: 'Web', rrpp: 'RRPP', organico: 'Orgánico', puerta: 'Puerta', importado: 'Importado' };
+const orgOf = g => g.origen === 'rrpp' && g.rrpp ? 'RRPP · ' + g.rrpp : (ORG_LABEL[g.origen] || g.origen);
+
+function render() {
+  const pres = G.filter(g => g.asistio).length;
+  $('#sT').textContent = G.length; $('#sP').textContent = pres; $('#sN').textContent = G.length - pres;
+
+  const origs = [...new Set(G.map(g => orgOf(g)))].sort();
+  $('#orig').innerHTML = ['all', ...origs].map(o => {
+    const sub = o === 'all' ? G : G.filter(g => orgOf(g) === o);
+    return `<div class="chip ${org === o ? 'on' : ''}" data-o="${esc(o)}">${o === 'all' ? 'Todos los orígenes' : esc(o)} ${sub.filter(g => g.asistio).length}/${sub.length}</div>`;
+  }).join('');
+  $('#flt').innerHTML = [['pend', 'Pendientes'], ['pres', 'Presentes'], ['todos', 'Todos']]
+    .map(([k, l]) => `<div class="chip ${flt === k ? 'on' : ''}" data-f="${k}">${l}</div>`).join('');
+
+  const t = q.toLowerCase();
+  const list = G.filter(g =>
+    (flt === 'todos' || (flt === 'pres') === g.asistio) &&
+    (org === 'all' || orgOf(g) === org) &&
+    (!t || String(g.nombre).toLowerCase().includes(t) || String(g.telefono).includes(t))
+  ).sort((a, b) => a.asistio - b.asistio || String(a.nombre).localeCompare(String(b.nombre)));
+
+  $('#list').innerHTML = list.length ? list.map(g => `
+    <div class="guest ${g.asistio ? 'pres' : ''}">
+      <div class="gi"><div class="gn">${esc(g.nombre)}</div>
+        <div class="gm"><span class="tag">${esc(orgOf(g))}</span> · ${esc(g.telefono)}${g.asistio ? ' · ✔ ' + esc(g.hora) : ''}</div></div>
+      ${role === 'admin' ? `<button class="r" data-del="${g.id}" style="padding:6px 9px">🗑</button>` : ''}
+      <button class="tg ${g.asistio ? 'on' : ''}" data-id="${g.id}">${g.asistio ? '✓' : ''}</button>
+    </div>`).join('') : '<p class="mut" style="text-align:center;padding:30px">No hay invitados que coincidan.</p>';
+}
+$('#orig').addEventListener('click', e => { if (e.target.dataset.o) { org = e.target.dataset.o; render(); } });
+$('#flt').addEventListener('click', e => { if (e.target.dataset.f) { flt = e.target.dataset.f; render(); } });
+$('#q').addEventListener('input', e => { q = e.target.value.trim(); render(); });
+
+$('#list').addEventListener('click', async e => {
+  const id = e.target.dataset.id, del = e.target.dataset.del;
+  if (id) {
+    const g = G.find(x => x.id === id), nuevo = !g.asistio;
+    g.asistio = nuevo; g.hora = nuevo ? 'ahora' : ''; render();
+    const r = await api('checkin', { id, marcar: nuevo });
+    if (r.error) { g.asistio = !nuevo; render(); toast('Error al guardar'); } else { toast((nuevo ? '✔ Ingresó: ' : '↺ Desmarcado: ') + g.nombre); refresh(); }
+  }
+  if (del && confirm('¿Eliminar este invitado?')) {
+    await api('delete', { id: del }); G = G.filter(x => x.id !== del); render();
+  }
+});
+
+$('#aB').onclick = async () => {
+  const nombre = $('#aN').value.trim(), telefono = $('#aT').value.trim();
+  if (!nombre) return toast('Falta el nombre');
+  const r = await api('add', { nombre, telefono, asistio: true });
+  if (r.error) return toast(r.error);
+  $('#aN').value = ''; $('#aT').value = ''; toast('Agregado y marcado presente'); refresh();
+};
+
+$('#csv').onclick = () => {
+  const rows = [['Nombre', 'Telefono', 'Origen', 'RRPP', 'Asistio', 'Hora'], ...G.map(g => [g.nombre, g.telefono, g.origen, g.rrpp, g.asistio ? 'Si' : 'No', g.hora])];
+  const csv = 'sep=;\r\n' + rows.map(r => r.map(v => /[";\n]/.test(v ?? '') ? '"' + String(v).replace(/"/g, '""') + '"' : (v ?? '')).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'invitados_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+};
+
+/* ---- Links ---- */
+function lnkRow(label, url) {
+  return `<div class="lnk"><b style="min-width:90px">${esc(label)}</b><code>${esc(url)}</code><button data-c="${esc(url)}">Copiar</button></div>`;
+}
+function renderLinks() {
+  $('#fixed').innerHTML = lnkRow('Web / Meta', BASE + '?o=web') + lnkRow('Orgánico', BASE + '?o=organico');
+  $('#rrpps').innerHTML = (C.rrpps || []).map(n => lnkRow(n, BASE + '?o=rrpp&r=' + encodeURIComponent(n))).join('') || '<small>Todavía no creaste RRPP.</small>';
+}
+document.addEventListener('click', e => {
+  if (e.target.dataset.c) { navigator.clipboard.writeText(e.target.dataset.c); toast('Link copiado'); }
+});
+$('#rB').onclick = async () => {
+  const n = $('#rN').value.trim(); if (!n) return;
+  if (!(C.rrpps = C.rrpps || []).includes(n)) C.rrpps.push(n);
+  await api('saveConfig', { data: { rrpps: JSON.stringify(C.rrpps) } });
+  $('#rN').value = ''; renderLinks();
+};
+
+/* ---- Importar ---- */
+$('#iF').onchange = e => { const f = e.target.files[0]; if (f) f.text().then(t => $('#iT').value = t); };
+$('#iB').onclick = async () => {
+  const items = $('#iT').value.split(/\r?\n/).map(l => l.trim()).filter(l => l && !/^sep=/i.test(l)).map(l => {
+    const p = l.split(/[;\t,]/).map(x => x.replace(/^"|"$/g, '').trim());
+    return { nombre: p[0], telefono: p[1] || '', origen: $('#iO').value, rrpp: $('#iR').value.trim() };
+  }).filter(i => i.nombre && !/^nombre$/i.test(i.nombre));
+  if (!items.length) return toast('No hay datos para importar');
+  $('#iS').textContent = 'Importando...';
+  const r = await api('import', { items });
+  $('#iS').textContent = r.error ? r.error : `Agregados: ${r.agregados} · Duplicados omitidos: ${r.duplicados}`;
+  if (!r.error) { $('#iT').value = ''; refresh(); }
+};
+
+/* ---- Evento / Flyer ---- */
+$('#cTB').onclick = async () => {
+  await api('saveConfig', { data: { titulo: $('#cT').value.trim() || 'Evento' } });
+  $('#evt').textContent = $('#cT').value.trim() || 'Evento'; toast('Guardado');
+};
+function drawBox() {
+  const el = $('#box'); if (!box) return;
+  el.style.left = box[0] * 100 + '%'; el.style.top = box[1] * 100 + '%';
+  el.style.width = box[2] * 100 + '%'; el.style.height = box[3] * 100 + '%';
+}
+async function loadFlyer() {
+  if (flyerData || !C.hasFlyer) return;
+  const f = await api('flyer');
+  if (f.dataUrl) showFlyer(f.dataUrl);
+}
+function showFlyer(url) {
+  $('#cI').src = url; $('#boxwrap').classList.remove('hide'); $('#cI').onload = drawBox;
+}
+$('#cF').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const im = new Image();
+  im.onload = () => { // achica a máx 1200px de ancho para que sea liviana
+    const k = Math.min(1, 1200 / im.width), cv = document.createElement('canvas');
+    cv.width = im.width * k; cv.height = im.height * k;
+    cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+    flyerData = cv.toDataURL('image/jpeg', 0.88); showFlyer(flyerData);
+  };
+  im.src = URL.createObjectURL(f);
+};
+(() => { // arrastrar para marcar el recuadro del nombre
+  const w = $('#boxwrap'); let st = null;
+  const pt = e => { const r = $('#cI').getBoundingClientRect(); return [Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), Math.min(1, Math.max(0, (e.clientY - r.top) / r.height))]; };
+  w.addEventListener('pointerdown', e => { st = pt(e); w.setPointerCapture(e.pointerId); });
+  w.addEventListener('pointermove', e => {
+    if (!st) return; const p = pt(e);
+    box = [Math.min(st[0], p[0]), Math.min(st[1], p[1]), Math.abs(p[0] - st[0]), Math.abs(p[1] - st[1])]; drawBox();
+  });
+  w.addEventListener('pointerup', () => st = null);
+})();
+$('#cB').onclick = async () => {
+  $('#cS').textContent = 'Guardando...';
+  try {
+    if (flyerData) { const r = await api('uploadFlyer', { dataUrl: flyerData }); if (r.error) throw new Error(r.error); C.hasFlyer = true; }
+    await api('saveConfig', { data: { bx: box[0], by: box[1], bw: box[2], bh: box[3] } });
+    $('#cS').textContent = '✔ Listo, ya se usa en la invitación'; flyerData = null;
+  } catch (err) { $('#cS').textContent = 'Error: ' + err.message; }
+};
+</script>
+</body>
+</html>
