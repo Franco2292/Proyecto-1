@@ -89,7 +89,7 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
 .cw{position:relative;height:270px;margin-top:12px}.tw{overflow-x:auto}
 .tbl{width:100%;border-collapse:collapse;margin-top:12px}.tbl th,.tbl td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--bd);font-size:13px;white-space:nowrap}.tbl th{color:var(--m);font-weight:600}
 .evr{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}.evr:last-child{border:0}.evr .n{flex:1;min-width:190px}.evr b{display:block}
-.dts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}.dts label{flex:1;min-width:140px;color:var(--m);font-size:12.5px}.dts input{margin-top:4px}
+.dts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}.dts label{flex:1;min-width:140px;color:var(--m);font-size:12.5px}.dts input,.dts select{margin-top:4px}
 </style>
 </head>
 <body>
@@ -156,6 +156,7 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
       <div class="card"><b>Comparación entre eventos</b><div class="cw"><canvas id="cEv"></canvas></div><div id="tEv"></div></div>
       <div class="card"><b>Presentes por canal en cada evento</b><div class="cw"><canvas id="cStk"></canvas></div><div id="tMat"></div></div>
       <div class="card"><b>Inscripciones por día (evento elegido)</b><div class="cw"><canvas id="cDia"></canvas></div></div>
+      <div class="card"><b>Ingresos por hora (evento elegido)</b><div class="cw"><canvas id="cHor"></canvas></div></div>
     </section>
 
     <!-- EVENTOS -->
@@ -167,7 +168,7 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
         <div class="row"><button class="p" id="eSave">Crear evento</button><button id="eCancel" class="hide">Cancelar edición</button><small id="eS"></small></div>
       </div>
       <div class="card"><b>Eventos</b><div id="eL" style="margin-top:8px"></div>
-        <div class="row" style="margin-top:14px"><button id="eRe">Reasignar invitados por fecha</button><small>Reubica a cada invitado según su fecha de registro. Útil si cambiás las fechas de un evento.</small></div>
+        <div id="eWarn"></div><div class="row" style="margin-top:14px"><button id="eRe">Reasignar invitados por fecha</button><small>Reubica a cada invitado según su fecha de registro. Usalo solo si tus eventos no se superponen en fechas.</small></div>
       </div>
     </section>
 
@@ -192,6 +193,20 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
         <input id="iR" placeholder="Nombre RRPP (si aplica)">
       </div>
       <button class="p" id="iB">Importar</button> <small id="iS"></small>
+    </div>
+    <div class="card">
+      <b>Importar listas de eventos anteriores</b><br>
+      <small>Copiá las columnas de tu planilla de Google (con la fila de títulos) y pegalas acá. Reconoce: <b>Fecha, Hora, Nombre, Teléfono, Asistio y HoraCheckin</b>. Si la planilla tiene una columna "Canal", se usa por fila. Se importa una lista (canal) por vez.</small>
+      <div class="dts" style="margin-top:12px">
+        <label>Evento<select id="hE"></select></label>
+        <label>Canal / lista<input id="hC" list="hCl" placeholder="Ej: Meta ADS"><datalist id="hCl"></datalist></label>
+      </div>
+      <div id="hNew"><div class="row"><input id="hN" placeholder="Nombre del evento nuevo (ej: Evento Agosto)" maxlength="60"></div>
+        <div class="dts"><label>Desde<input type="date" id="hI"></label><label>Hasta<input type="date" id="hF"></label></div></div>
+      <textarea id="hT" placeholder="Pegá acá las filas copiadas de Google Sheets..."></textarea>
+      <div class="row" style="margin-top:8px"><input type="file" id="hFile" accept=".csv,.txt,.tsv"></div>
+      <div id="hPrev" class="mut" style="margin:6px 0 10px"></div>
+      <div class="row"><button class="p" id="hB">Importar lista</button><small id="hS"></small></div>
     </div>
   </section>
 
@@ -523,6 +538,7 @@ function setData(r) {
 function fillEvSel() {
   const ord = EV.slice().sort((a, b) => b.inicio.localeCompare(a.inicio));
   $('#evSel').innerHTML = ord.map(e => `<option value="${e.id}" ${e.id === curEv ? 'selected' : ''}>${esc(e.label)} · ${rango(e)}</option>`).join('');
+  fillImpSel();
 }
 $('#evSel').onchange = e => {
   curEv = e.target.value; G = ALL.filter(g => g.evento === curEv); org = 'all'; render();
@@ -578,6 +594,7 @@ function renderAna() {
   $('#tMat').innerHTML = tbl(['Canal (presentes / invitados · asistencia)', ...evs.map(e => e.label)],
     chs.map(c => [esc(c), ...st.map(s => { const x = s.c[c]; return x ? x.p + '/' + x.i + ' · ' + pct(x.p, x.i) + '%' : '—'; })]));
 
+  renderHor();
   // 4) Inscripciones por día del evento elegido
   const dias = {};
   G.forEach(g => { const d = String(g.fecha || '').slice(0, 10); if (/^\d{4}-\d{2}-\d{2}$/.test(d)) dias[d] = (dias[d] || 0) + 1; });
@@ -594,6 +611,9 @@ function renderEvt() {
     return `<div class="evr"><div class="n"><b>${esc(e.label)}${e.id === curEv ? ' <small>(viendo)</small>' : ''}</b><small>${rango(e)} · ${l.length} invitados · ${p} presentes</small></div>
       <button data-ee="${e.id}">Editar</button><button class="r" data-ed="${e.id}" title="Eliminar">${IC('trash')}</button></div>`;
   }).join('') || '<small>Todavía no hay eventos.</small>';
+  const asc = EV.slice().sort((x, y) => x.inicio.localeCompare(y.inicio)), sup = [];
+  for (let n = 0; n < asc.length; n++) for (let k = n + 1; k < asc.length; k++) if (asc[k].inicio <= asc[n].fin) sup.push(asc[n].label + ' y ' + asc[k].label);
+  $('#eWarn').innerHTML = sup.length ? `<small style="color:var(--warn);display:block;margin-top:10px">⚠ Fechas superpuestas entre: ${esc(sup.slice(0, 3).join('; '))}${sup.length > 3 ? '…' : ''}. Para el histórico no hay problema, pero no uses «Reasignar por fecha» o se mezclarán invitados.</small>` : '';
 }
 function resetEvForm() {
   editEv = null; $('#eN').value = ''; $('#eI').value = ''; $('#eF').value = '';
@@ -628,6 +648,154 @@ $('#eRe').onclick = async () => {
   const r = await api('reasignar');
   if (r.error) return toast(r.error);
   toast('Invitados reubicados: ' + r.cambiados); await refresh(); renderEvt();
+};
+
+/* ---- Ingresos por hora ---- */
+function renderHor() {
+  const hs = {};
+  G.forEach(g => { if (g.asistio && /^\d{4}-\d{2}-\d{2} \d{2}:/.test(g.hora || '')) { const h = g.hora.slice(11, 13); hs[h] = (hs[h] || 0) + 1; } });
+  const ord = h => +h < 8 ? +h + 24 : +h; // la noche cruza la medianoche
+  const ks = Object.keys(hs).sort((a, b) => ord(a) - ord(b));
+  mk('cHor', { type: 'bar', options: { scales: yCnt, plugins: { legend: { display: false } } },
+    data: { labels: ks.map(h => h + ':00'), datasets: [{ label: 'Ingresos', data: ks.map(h => hs[h]), backgroundColor: '#f5a524', borderRadius: 4 }] } });
+}
+
+/* ---- Importar listas de eventos anteriores ---- */
+function fillImpSel(sel) {
+  const el = $('#hE'); if (!el) return;
+  const keep = sel || el.value;
+  const ord = EV.slice().sort((a, b) => b.inicio.localeCompare(a.inicio));
+  el.innerHTML = '<option value="__auto">🔎 Detectar los eventos solo (según la fecha de ingreso)</option>' + ord.map(e => `<option value="${e.id}">${esc(e.label)} · ${rango(e)}</option>`).join('') + '<option value="__new">➕ Crear un evento nuevo…</option>';
+  el.value = [...el.options].some(o => o.value === keep) ? keep : '__auto';
+  $('#hNew').classList.toggle('hide', el.value !== '__new');
+  const extra = ALL.map(g => g.origen).filter(o => o && !['web', 'organico', 'puerta', 'rrpp', 'importado'].includes(o));
+  $('#hCl').innerHTML = [...new Set(['Web', 'Orgánico', 'Meta ADS', 'TikTok ADS', 'Instagram', ...extra])].map(c => `<option value="${esc(c)}">`).join('');
+}
+$('#hE').onchange = () => { $('#hNew').classList.toggle('hide', $('#hE').value !== '__new'); hPreview(); };
+
+function parseDate(s) { // dd/MM/yyyy o yyyy-MM-dd -> yyyy-MM-dd
+  s = String(s || '').trim();
+  let m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+  if (m) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[0] : '';
+}
+function parseTime(s) { const m = String(s || '').match(/(\d{1,2}):(\d{2})/); return m ? m[1].padStart(2, '0') + ':' + m[2] : ''; }
+function parseHist(text) {
+  const lines = String(text || '').split(/\r?\n/).filter(l => l.trim());
+  if (!lines.length) return [];
+  const sep = lines[0].includes('\t') ? '\t' : (lines[0].includes(';') ? ';' : ',');
+  const cells = l => l.split(sep).map(x => x.trim().replace(/^"|"$/g, ''));
+  const head = cells(lines[0]).map(x => x.toLowerCase());
+  let idx = { f: 0, h: 1, n: 2, t: 3, a: 4, c: 5, o: -1 }; // orden de tu planilla si no hay títulos
+  if (head.some(x => /nombre|tel|fecha/.test(x))) {
+    const find = fn => head.findIndex(fn);
+    idx = { f: find(x => x === 'fecha'), h: find(x => x === 'hora'), n: find(x => x.startsWith('nombre')), t: find(x => x.startsWith('tel')),
+      a: find(x => x.startsWith('asist')), c: find(x => x.includes('check')), o: find(x => /^(canal|origen|fuente|lista)$/.test(x)) };
+    lines.shift();
+  }
+  return lines.map(l => {
+    const c = cells(l), g = i => i >= 0 ? (c[i] || '') : '';
+    const fd = parseDate(g(idx.f)), ft = parseTime(g(idx.h)) || parseTime(g(idx.f));
+    const cd = parseDate(g(idx.c)), chk = cd ? cd + ' ' + (parseTime(g(idx.c)) || '00:00') : '';
+    return { nombre: g(idx.n), telefono: g(idx.t).replace(/[^\d+]/g, ''), fecha: fd ? fd + ' ' + (ft || '00:00') : '',
+      asistio: /^(true|si|sí|1|x|yes|verdadero)$/i.test(g(idx.a)) || !!chk, checkin: chk, origen: g(idx.o) };
+  }).filter(r => r.nombre);
+}
+
+function eventDay(chk) { // la noche cruza la medianoche: un ingreso antes de las 08:00 cuenta como el día anterior
+  const d = new Date(+chk.slice(0, 4), +chk.slice(5, 7) - 1, +chk.slice(8, 10), +chk.slice(11, 13), +chk.slice(14, 16) - 480);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function splitEvents(rows) { // agrupa por día de evento: los que ingresaron definen los días; el resto va al próximo evento
+  const days = [...new Set(rows.filter(r => r.checkin).map(r => eventDay(r.checkin)))].sort();
+  if (!days.length) return [];
+  const m = {};
+  rows.forEach(r => {
+    const reg = (r.fecha || '').slice(0, 10);
+    const day = r.checkin ? eventDay(r.checkin) : (days.find(d => d >= reg) || days[days.length - 1]);
+    const gp = m[day] = m[day] || { dia: day, inicio: day, rows: [] };
+    gp.rows.push(r);
+    if (reg && reg < gp.inicio) gp.inicio = reg;
+  });
+  return days.map(d => m[d]);
+}
+
+let hRows = [], hAuto = true;
+$('#hI').oninput = $('#hF').oninput = () => { hAuto = false; };
+function hPreview() {
+  hRows = parseHist($('#hT').value);
+  if (!hRows.length) { $('#hPrev').textContent = ''; return; }
+  const conF = hRows.filter(r => r.fecha).length, pres = hRows.filter(r => r.asistio).length;
+  const ds = hRows.filter(r => r.fecha).map(r => r.fecha.slice(0, 10)).concat(hRows.filter(r => r.checkin).map(r => r.checkin.slice(0, 10))).sort();
+  $('#hPrev').innerHTML = `<b style="color:var(--t)">${hRows.length}</b> filas · <b style="color:var(--g)">${pres}</b> con asistencia · ${hRows.length - conF} sin fecha válida` + (ds.length ? ` · del ${fmtD(ds[0])} al ${fmtD(ds[ds.length - 1])}` : '');
+  if ($('#hE').value === '__auto') {
+    const gs = splitEvents(hRows);
+    $('#hPrev').innerHTML += gs.length
+      ? '<br>Eventos detectados: ' + gs.map(x => `<b style="color:var(--t)">${fmtD(x.dia)}</b> (${x.rows.length} invitados, ${x.rows.filter(r => r.asistio).length} presentes${EV.some(e => e.fin === x.dia) ? ', ya existe' : ', se crea'})`).join(' · ')
+      : '<br><span style="color:var(--warn)">⚠ Sin horas de ingreso no se pueden detectar los eventos: elegí un evento de la lista.</span>';
+  }
+  if (ds.length && (hAuto || !$('#hI').value)) { $('#hI').value = ds[0]; $('#hF').value = ds[ds.length - 1]; hAuto = true; }
+}
+$('#hT').addEventListener('input', hPreview);
+$('#hFile').onchange = e => { const f = e.target.files[0]; if (f) f.text().then(t => { $('#hT').value = t; hPreview(); }); };
+
+const toItems = (rows, canal, fb) => rows.map(r => ({ nombre: r.nombre, telefono: r.telefono, origen: r.origen || canal, fecha: r.fecha || fb, asistio: r.asistio, checkin: r.checkin }));
+async function sendItems(items, ev, prog) {
+  let add = 0, dup = 0;
+  for (let i = 0; i < items.length; i += 400) {
+    const r = await api('import', { items: items.slice(i, i + 400), evento: ev });
+    if (r.error) throw new Error(r.error);
+    add += r.agregados; dup += r.duplicados;
+    prog(Math.min(i + 400, items.length), items.length);
+  }
+  return { add, dup };
+}
+$('#hB').onclick = async () => {
+  hPreview();
+  if (!hRows.length) { $('#hS').textContent = 'Pegá primero las filas de la lista'; return; }
+  const canal = $('#hC').value.trim();
+  if (!canal && hRows.some(r => !r.origen)) { $('#hS').textContent = 'Indicá el canal / lista'; return; }
+  $('#hB').disabled = true; $('#hS').textContent = 'Importando...';
+  const prog = (n, t) => { $('#hS').textContent = `Importando... ${n}/${t}`; };
+  try {
+    const modo = $('#hE').value;
+    let add = 0, dup = 0, nEv = 0, lastEv = null;
+    if (modo === '__auto') {
+      const gs = splitEvents(hRows);
+      if (!gs.length) throw new Error('Sin horas de ingreso no se pueden detectar los eventos: elegí un evento de la lista');
+      for (const gp of gs) {
+        let ex = EV.find(e => e.fin === gp.dia), id;
+        if (ex) {
+          id = ex.id;
+          if (gp.inicio < ex.inicio) { await api('saveEvento', { id, label: ex.label, inicio: gp.inicio, fin: ex.fin }); ex.inicio = gp.inicio; }
+        } else {
+          const label = 'Evento ' + fmtD(gp.dia);
+          const r = await api('saveEvento', { label, inicio: gp.inicio, fin: gp.dia });
+          if (r.error) throw new Error(r.error);
+          id = r.id; EV.push({ id, label, inicio: gp.inicio, fin: gp.dia });
+        }
+        const r = await sendItems(toItems(gp.rows, canal, gp.inicio + ' 00:00'), id, prog);
+        add += r.add; dup += r.dup; nEv++; lastEv = id;
+      }
+    } else {
+      let ev = modo;
+      if (ev === '__new') {
+        const label = $('#hN').value.trim(), ini = $('#hI').value, fin = $('#hF').value || ini;
+        if (!label || !ini) throw new Error('Completá el nombre y las fechas del evento nuevo');
+        const r = await api('saveEvento', { label, inicio: ini, fin });
+        if (r.error) throw new Error(r.error);
+        ev = r.id; curEv = ev; await refresh(); fillImpSel(ev); $('#hN').value = '';
+      }
+      const evo = EV.find(x => x.id === ev), fb = ((evo && evo.inicio) || $('#hI').value) + ' 00:00';
+      const r = await sendItems(toItems(hRows, canal, fb), ev, prog);
+      add = r.add; dup = r.dup; nEv = 1; lastEv = ev;
+    }
+    $('#hS').textContent = `✔ Agregados: ${add} · Duplicados omitidos: ${dup} · Eventos: ${nEv}. Ya podés verlos en Analítica.`;
+    $('#hT').value = ''; $('#hPrev').textContent = ''; hRows = []; hAuto = true;
+    curEv = lastEv; await refresh();
+  } catch (err) { $('#hS').textContent = 'Error: ' + err.message; }
+  $('#hB').disabled = false;
 };
 </script>
 </body>
