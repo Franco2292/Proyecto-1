@@ -90,10 +90,14 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
 .tbl{width:100%;border-collapse:collapse;margin-top:12px}.tbl th,.tbl td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--bd);font-size:13px;white-space:nowrap}.tbl th{color:var(--m);font-weight:600}
 .evr{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}.evr:last-child{border:0}.evr .n{flex:1;min-width:190px}.evr b{display:block}
 .dts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}.dts label{flex:1;min-width:140px;color:var(--m);font-size:12.5px}.dts input,.dts select{margin-top:4px}
+.rh{font-size:16px;font-weight:700;margin:20px 0 4px}.rh em{font-style:normal;color:var(--m);font-weight:400;font-size:13px;margin-left:8px}.rd{color:var(--m);font-size:12.5px;margin:0 0 10px}
+.gh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
+.dr{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd);cursor:pointer}
+.dr input{width:20px;height:20px;padding:0;flex:none;accent-color:var(--g)}.dr .gi2{flex:1;min-width:0}.dr .gi2 b{display:block}.dr .gi2 small{display:block;margin-top:2px}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute"><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-checkc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol><symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol><symbol id="i-door" viewBox="0 0 24 24"><path d="M14 3h4a2 2 0 0 1 2 2v16H4V5a2 2 0 0 1 2-2h4"/><path d="M10 3v18M14 12v.01"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></symbol><symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol><symbol id="i-userplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></symbol><symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7S5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.3-7-12.3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute"><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-checkc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol><symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol><symbol id="i-door" viewBox="0 0 24 24"><path d="M14 3h4a2 2 0 0 1 2 2v16H4V5a2 2 0 0 1 2-2h4"/><path d="M10 3v18M14 12v.01"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></symbol><symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol><symbol id="i-userplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></symbol><symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7S5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.3-7-12.3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></symbol><symbol id="i-report" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 13h6M9 17h4"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></symbol></svg>
 <div id="login" class="card">
   <div class="brand"><svg class="i"><use href="#i-drop"/></svg>DROPS</div><small>Panel de recepción</small>
   <input id="pin" type="password" inputmode="numeric" placeholder="PIN">
@@ -103,7 +107,7 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
 <div class="shell hide" id="app">
   <aside class="side">
     <div class="brand"><svg class="i"><use href="#i-drop"/></svg>DROPS</div>
-    <nav class="nav"><button data-t="rec" class="on"><svg class="i"><use href="#i-users"/></svg>Recepción</button><button data-t="ana" class="adm"><svg class="i"><use href="#i-chart"/></svg>Analítica</button><button data-t="evt" class="adm"><svg class="i"><use href="#i-cal"/></svg>Eventos</button><button data-t="lnk" class=" adm"><svg class="i"><use href="#i-link"/></svg>Links</button><button data-t="imp" class=" adm"><svg class="i"><use href="#i-upload"/></svg>Importar</button><button data-t="cfg" class=" adm"><svg class="i"><use href="#i-image"/></svg>Evento / Flyer</button></nav>
+    <nav class="nav"><button data-t="rec" class="on"><svg class="i"><use href="#i-users"/></svg>Recepción</button><button data-t="ana" class="adm"><svg class="i"><use href="#i-chart"/></svg>Analítica</button><button data-t="rep" class="adm"><svg class="i"><use href="#i-report"/></svg>Reporte</button><button data-t="evt" class="adm"><svg class="i"><use href="#i-cal"/></svg>Eventos</button><button data-t="lnk" class=" adm"><svg class="i"><use href="#i-link"/></svg>Links</button><button data-t="imp" class=" adm"><svg class="i"><use href="#i-upload"/></svg>Importar</button><button data-t="cfg" class=" adm"><svg class="i"><use href="#i-image"/></svg>Evento / Flyer</button></nav>
     <div class="side-foot">Urban Jungle Bar &amp; Pub<br>Eventos · Invitados · Experiencias</div>
   </aside>
 
@@ -115,10 +119,17 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
         <div><svg class="i"><use href="#i-pin"/></svg><div><select id="evSel" style="padding:8px 12px;font-size:13px;min-width:210px;max-width:340px"></select><small>Evento que estás viendo</small><span id="evt" class="hide"></span></div></div>
       </div>
     </header>
-    <div class="tabs" id="tabs"><button data-t="rec" class="on"><svg class="i"><use href="#i-users"/></svg>Recepción</button><button data-t="ana" class="adm"><svg class="i"><use href="#i-chart"/></svg>Analítica</button><button data-t="evt" class="adm"><svg class="i"><use href="#i-cal"/></svg>Eventos</button><button data-t="lnk" class=" adm"><svg class="i"><use href="#i-link"/></svg>Links</button><button data-t="imp" class=" adm"><svg class="i"><use href="#i-upload"/></svg>Importar</button><button data-t="cfg" class=" adm"><svg class="i"><use href="#i-image"/></svg>Evento / Flyer</button></div>
+    <div class="tabs" id="tabs"><button data-t="rec" class="on"><svg class="i"><use href="#i-users"/></svg>Recepción</button><button data-t="ana" class="adm"><svg class="i"><use href="#i-chart"/></svg>Analítica</button><button data-t="rep" class="adm"><svg class="i"><use href="#i-report"/></svg>Reporte</button><button data-t="evt" class="adm"><svg class="i"><use href="#i-cal"/></svg>Eventos</button><button data-t="lnk" class=" adm"><svg class="i"><use href="#i-link"/></svg>Links</button><button data-t="imp" class=" adm"><svg class="i"><use href="#i-upload"/></svg>Importar</button><button data-t="cfg" class=" adm"><svg class="i"><use href="#i-image"/></svg>Evento / Flyer</button></div>
 
     <!-- RECEPCIÓN -->
     <section id="t-rec">
+      <div class="card door">
+        <div class="ico"><svg class="i"><use href="#i-door"/></svg></div>
+        <div class="txt"><b>Alta en puerta</b><small>Agregá un invitado manualmente al evento. Entra marcado presente.</small></div>
+        <div class="fld"><svg class="i"><use href="#i-user"/></svg><input id="aN" placeholder="Nombre y apellido"></div>
+        <div class="fld"><svg class="i"><use href="#i-phone"/></svg><input id="aT" type="tel" placeholder="Teléfono"></div>
+        <button class="p" id="aB"><svg class="i"><use href="#i-userplus"/></svg>Agregar invitado</button>
+      </div>
       <div class="stats">
         <div class="stat"><div class="ico"><svg class="i"><use href="#i-users"/></svg></div><div><span>Invitados</span><b id="sT">0</b></div></div>
         <div class="stat"><div class="ico"><svg class="i"><use href="#i-checkc"/></svg></div><div><span>Presentes</span><b id="sP" style="color:var(--g)">0</b></div></div>
@@ -136,14 +147,7 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
           <div id="list"></div>
         </div>
       </div>
-      <div class="card door">
-        <div class="ico"><svg class="i"><use href="#i-door"/></svg></div>
-        <div class="txt"><b>Alta en puerta</b><small>Agregá un invitado manualmente al evento. Entra marcado presente.</small></div>
-        <div class="fld"><svg class="i"><use href="#i-user"/></svg><input id="aN" placeholder="Nombre y apellido"></div>
-        <div class="fld"><svg class="i"><use href="#i-phone"/></svg><input id="aT" type="tel" placeholder="Teléfono"></div>
-        <button class="p" id="aB"><svg class="i"><use href="#i-userplus"/></svg>Agregar invitado</button>
-      </div>
-    </section>
+      </section>
 
     <!-- ANALÍTICA -->
     <section id="t-ana" class="hide">
@@ -157,6 +161,17 @@ button.r{background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.35);color:#f
       <div class="card"><b>Presentes por canal en cada evento</b><div class="cw"><canvas id="cStk"></canvas></div><div id="tMat"></div></div>
       <div class="card"><b>Inscripciones por día (evento elegido)</b><div class="cw"><canvas id="cDia"></canvas></div></div>
       <div class="card"><b>Ingresos por hora (evento elegido)</b><div class="cw"><canvas id="cHor"></canvas></div></div>
+    </section>
+
+    <!-- REPORTE -->
+    <section id="t-rep" class="hide">
+      <div class="card">
+        <b>Reporte de duplicados</b> <small>· <span id="rEv"></span></small><br>
+        <small>Se revisa el evento elegido arriba (el mismo número en eventos distintos es normal). Los teléfonos tienen que ser únicos; los nombres iguales con teléfono distinto pueden ser personas diferentes.</small>
+        <div class="row" style="margin-top:12px"><button id="rRef">Actualizar</button><button class="r" id="rAll">Eliminar todos los repetidos por teléfono</button><small id="rS"></small></div>
+      </div>
+      <div id="rPhone"></div>
+      <div id="rName"></div>
     </section>
 
     <!-- EVENTOS -->
@@ -289,10 +304,11 @@ async function refresh() { const r = await api('list'); if (!r.error) { setData(
 /* ---- Tabs ---- */
 function goTab(t) {
   document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-  ['rec', 'ana', 'evt', 'lnk', 'imp', 'cfg'].forEach(x => $('#t-' + x).classList.toggle('hide', x !== t));
+  ['rec', 'ana', 'rep', 'evt', 'lnk', 'imp', 'cfg'].forEach(x => $('#t-' + x).classList.toggle('hide', x !== t));
   if (t === 'cfg') { loadFlyer(); loadAssets(); }
   if (t === 'ana') renderAna();
   if (t === 'evt') renderEvt();
+  if (t === 'rep') renderRep();
   window.scrollTo(0, 0);
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) goTab(b.dataset.t); });
@@ -316,7 +332,7 @@ function render() {
   }).join('');
 
   const cnt = { pend: G.length - pres, pres: pres, todos: G.length };
-  $('#flt').innerHTML = [['pend', 'Pendientes'], ['pres', 'Presentes'], ['todos', 'Todos']]
+  $('#flt').innerHTML = [['todos', 'Todos'], ['pend', 'Pendientes'], ['pres', 'Presentes']]
     .map(([k, l]) => `<button class="${flt === k ? 'on' : ''}" data-f="${k}">${l}<em>${cnt[k]}</em></button>`).join('');
 
   const t = q.toLowerCase();
@@ -324,7 +340,7 @@ function render() {
     (flt === 'todos' || (flt === 'pres') === g.asistio) &&
     (org === 'all' || orgOf(g) === org) &&
     (!t || String(g.nombre).toLowerCase().includes(t) || String(g.telefono).includes(t))
-  ).sort((a, b) => a.asistio - b.asistio || String(a.nombre).localeCompare(String(b.nombre)));
+  ).sort((a, b) => String(a.nombre).trim().localeCompare(String(b.nombre).trim(), 'es', { sensitivity: 'base' })); // siempre alfabético: al marcar ingreso la fila no se mueve
 
   $('#list').innerHTML = list.length ? list.map(g => {
     const o = orgOf(g);
@@ -543,6 +559,7 @@ function fillEvSel() {
 $('#evSel').onchange = e => {
   curEv = e.target.value; G = ALL.filter(g => g.evento === curEv); org = 'all'; render();
   if (!$('#t-ana').classList.contains('hide')) renderAna();
+  if (!$('#t-rep').classList.contains('hide')) renderRep();
 };
 
 const PAL = ['#2ee68a', '#f5a524', '#4da3ff', '#ff6b9d', '#b388ff', '#ffd54f', '#26c6da', '#ff8a65', '#9ccc65', '#ba68c8'];
@@ -797,6 +814,66 @@ $('#hB').onclick = async () => {
   } catch (err) { $('#hS').textContent = 'Error: ' + err.message; }
   $('#hB').disabled = false;
 };
+
+/* ---- Reporte de duplicados ---- */
+const normTel = t => { const d = String(t || '').replace(/\D/g, ''); return d.length >= 10 ? d.slice(-10) : d; }; // 54911..., +54 9 ..., 0381... -> mismos 10 dígitos
+const normNom = n => String(n || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+const keeperOf = a => a.slice().sort((x, y) => (+y.asistio) - (+x.asistio) || String(x.fecha).localeCompare(String(y.fecha)))[0]; // se conserva el que ingresó, o el primero en registrarse
+function dupGroups() {
+  const p = {}, n = {};
+  G.forEach(g => {
+    const t = normTel(g.telefono), k = normNom(g.nombre);
+    if (t) (p[t] = p[t] || []).push(g);
+    if (k) (n[k] = n[k] || []).push(g);
+  });
+  return { ph: Object.values(p).filter(a => a.length > 1),
+           nm: Object.values(n).filter(a => a.length > 1 && new Set(a.map(g => normTel(g.telefono))).size > 1) };
+}
+function dupRow(g, chk) {
+  const o = orgOf(g);
+  return `<label class="dr"><input type="checkbox" class="dchk" data-id="${g.id}" ${chk ? 'checked' : ''}>
+    <span class="av">${esc(ini(g.nombre))}</span>
+    <div class="gi2"><b>${esc(g.nombre)}</b><small>${esc(o)} · ${esc(g.telefono || 'sin teléfono')} · registrado ${esc(fmtH(g.fecha))}</small></div>
+    ${g.asistio ? '<span class="pill">' + IC('check') + 'Presente</span>' : ''}</label>`;
+}
+const dupCard = (tit, arr, keep) => `<div class="card"><div class="gh"><b>${esc(tit)}</b><small>${arr.length} registros</small></div>
+  ${arr.map(g => dupRow(g, keep && g !== keep)).join('')}
+  <div class="row" style="margin:12px 0 0"><button class="r" data-g="1">${IC('trash')} Eliminar seleccionados</button></div></div>`;
+
+function renderRep() {
+  const ev = EV.find(e => e.id === curEv) || {};
+  $('#rEv').textContent = ev.label || '';
+  const { ph, nm } = dupGroups();
+  const sob = ph.reduce((s, a) => s + a.length - 1, 0);
+  $('#rPhone').innerHTML = `<div class="rh">Mismo teléfono<em>${ph.length} grupo${ph.length === 1 ? '' : 's'} · ${sob} repetido${sob === 1 ? '' : 's'}</em></div>
+    <p class="rd">Un teléfono no puede repetirse. Ya viene tildado lo que sobra; se conserva el que ingresó (o el primero que se registró).</p>`
+    + (ph.length ? ph.map(a => { const k = keeperOf(a); return dupCard('Teléfono ' + normTel(a[0].telefono), [k, ...a.filter(g => g !== k)], k); }).join('')
+                 : '<div class="card empty">No hay teléfonos repetidos 🎉</div>');
+  $('#rName').innerHTML = `<div class="rh">Mismo nombre, teléfono distinto<em>${nm.length} grupo${nm.length === 1 ? '' : 's'}</em></div>
+    <p class="rd">Pueden ser personas distintas que se llaman igual. Tildá solo los que quieras eliminar.</p>`
+    + (nm.length ? nm.map(a => dupCard('Nombre: ' + a[0].nombre, a, null)).join('') : '<div class="card empty">No hay nombres repetidos con teléfono distinto</div>');
+  $('#rAll').classList.toggle('hide', !ph.length);
+}
+async function delIds(ids) {
+  for (let n = 0; n < ids.length; n++) {
+    $('#rS').textContent = `Eliminando ${n + 1}/${ids.length}...`;
+    const r = await api('delete', { id: ids[n] });
+    if (r.error) { toast(r.error); break; }
+  }
+  await refresh(); renderRep(); $('#rS').textContent = '✔ Listo'; toast('Registros eliminados');
+}
+$('#t-rep').addEventListener('click', async e => {
+  const b = e.target.closest('[data-g]'); if (!b) return;
+  const all = [...b.closest('.card').querySelectorAll('.dchk')], sel = all.filter(c => c.checked).map(c => c.dataset.id);
+  if (!sel.length) return toast('Tildá los que querés eliminar');
+  if (sel.length === all.length) return toast('Dejá al menos un registro sin tildar');
+  if (confirm(`¿Eliminar ${sel.length} registro${sel.length === 1 ? '' : 's'}? No se puede deshacer.`)) await delIds(sel);
+});
+$('#rAll').onclick = async () => {
+  const ids = dupGroups().ph.flatMap(a => { const k = keeperOf(a); return a.filter(g => g !== k).map(g => g.id); });
+  if (ids.length && confirm(`¿Eliminar ${ids.length} registros repetidos por teléfono? Se conserva uno por cada teléfono. No se puede deshacer.`)) await delIds(ids);
+};
+$('#rRef').onclick = async () => { await refresh(); renderRep(); };
 </script>
 </body>
 </html>
